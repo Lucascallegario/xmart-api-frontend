@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XMart API Viewer</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; margin: 0; background-color: #f4f4f4; }
+    h1 { color: #2c3e50; text-align: center; }
+    .card { background: #fff; border-radius: 8px; padding: 16px; margin: 16px auto; max-width: 500px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .card h2 { font-size: 18px; color: #333; }
+    .card button { background-color: #2c3e50; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; }
+    .card button:hover { background-color: #34495e; }
+    .response { margin-top: 10px; font-size: 14px; background: #eef; padding: 10px; border-radius: 4px; word-break: break-word; }
+    input { width: 100%; padding: 8px; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Visualizador XMart API</h1>
+
+  <div class="card">
+    <h2>Status da API</h2>
+    <button onclick="fetchStatus()">Consultar</button>
+    <div class="response" id="status"></div>
+  </div>
+
+  <div class="card">
+    <h2>KPI de Vendas</h2>
+    <button onclick="fetchKPI()">Consultar</button>
+    <div class="response" id="kpi"></div>
+  </div>
+
+  <div class="card">
+    <h2>Recomendações por Cliente</h2>
+    <input id="clienteId" placeholder="Digite o ID do Cliente (ex: CL0001)" />
+    <button onclick="fetchRecomendacoes()">Consultar</button>
+    <div class="response" id="recomendacoes"></div>
+  </div>
+
+  <div class="card">
+    <h2>Recomendação Cruzada (Cross-sell)</h2>
+    <input id="produtoNome" placeholder="Digite o nome do produto (ex: Arroz)" />
+    <button onclick="fetchCrossSell()">Consultar</button>
+    <div class="response" id="crosssell"></div>
+  </div>
+
+  <script>
+    const baseURL = "https://xmart-backend-api-production.up.railway.app";
+
+    function fetchStatus() {
+      fetch(`${baseURL}/`)
+        .then(res => res.json())
+        .then(data => document.getElementById("status").textContent = JSON.stringify(data));
+    }
+
+    function fetchKPI() {
+      fetch(`${baseURL}/kpi/vendas`)
+        .then(res => res.json())
+        .then(data => document.getElementById("kpi").textContent = JSON.stringify(data));
+    }
+
+    function fetchRecomendacoes() {
+      const cliente = document.getElementById("clienteId").value;
+      fetch(`${baseURL}/recomendacoes/${cliente}`)
+        .then(res => res.json())
+        .then(data => document.getElementById("recomendacoes").textContent = JSON.stringify(data));
+    }
+
+    function fetchCrossSell() {
+      const produto = document.getElementById("produtoNome").value;
+      fetch(`${baseURL}/cross-sell/${produto}`)
+        .then(res => res.json())
+        .then(data => document.getElementById("crosssell").textContent = JSON.stringify(data));
+    }
+  </script>
+</body>
+</html>
